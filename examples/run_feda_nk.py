@@ -1,9 +1,9 @@
 # feda_project/examples/run_feda_nk.py
-import sys
-import os
+#import sys
+#import os
 # Ensure the project root is in the Python path
 # For the provided structure:
-sys.path.append("D:/New_folder/Python_Project/feda-project")
+#sys.path.append("D:/New_folder/Python_Project/feda-project")
 # A more relative path might be (uncomment and adjust if needed):
 # SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..")) # Goes up one level from 'examples'
