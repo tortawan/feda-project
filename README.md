@@ -28,7 +28,21 @@ To provide a benchmark and explore alternative EDA approaches, a version of the 
 
 ## Project Structure
 
-feda-project/├── .gitignore├── README.md├── requirements.txt├── examples/│   └── run_feda_nk.py        # Main script to run experiments and compare algorithms├── feda_algorithm/│   ├── init.py│   └── optimizer.py          # Contains RF_MIMIC and MIMIC_O2 classes├── problem_definitions/│   ├── init.py│   └── nk_landscape.py       # Defines the NK-Landscape problem└── utils/├── init.py└── debugging.py          # Utility for debug printing
+feda-project/
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── examples/
+│   └── run_feda_nk.py        # Main script to run experiments and compare algorithms
+├── feda_algorithm/
+│   ├── __init__.py
+│   └── optimizer.py          # Contains RF_MIMIC and MIMIC_O2 classes
+├── problem_definitions/
+│   ├── __init__.py
+│   └── nk_landscape.py       # Defines the NK-Landscape problem
+└── utils/
+    ├── __init__.py
+    └── debugging.py          # Utility for debug printing
 ## Setup Instructions
 
 ### Prerequisites
