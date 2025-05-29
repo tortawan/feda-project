@@ -1,8 +1,19 @@
-
+# feda_project/examples/run_feda_nk.py
+import sys
+import os
+# Ensure the project root is in the Python path
+# For the provided structure:
+# sys.path.append("D:/New_folder/Python_Project/feda-project") # User's specific path
+# A more relative path might be (uncomment and adjust if needed):
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..")) 
+if PROJECT_ROOT not in sys.path:
+    sys.path.append(PROJECT_ROOT)
 
 
 import numpy as np
-from feda_algorithm.optimizer import RF_MIMIC, MIMIC_O2 # Import both optimizers
+import matplotlib.pyplot as plt # Import matplotlib
+from feda_algorithm.optimizer import RF_MIMIC, MIMIC_O2 
 from problem_definitions.nk_landscape import NKLandscapeProblem
 from utils.debugging import print_debug, DEBUG_MODE
 
@@ -15,13 +26,11 @@ if __name__ == "__main__":
 
     # 1. Define the problem (once for both algorithms)
     N_genes = 50
-    K_interactions = 10
-    landscape_seed = 50 # Ensure the same landscape for both
+    K_interactions = 20
+    landscape_seed = 40 
     problem = NKLandscapeProblem(N=N_genes, K=K_interactions, landscape_seed=landscape_seed)
     print(f"Problem: {problem} with landscape_seed={landscape_seed}")
 
-    # Define algorithm configurations
-    # Note: We standardized to optimizer.population_size and optimizer.elite_ratio in optimizer.py
     algorithms_to_run = [
         {
             "name": "RF_MIMIC",
@@ -40,15 +49,17 @@ if __name__ == "__main__":
             "class": MIMIC_O2,
             "config": {
                 "problem": problem,
-                "population_size": 3000,
+                "population_size": 1000,
                 "max_iterations": 50,
-                "elite_ratio": 0.2 # Standardized to elite_ratio
+                "elite_ratio": 0.2 
             }
         }
     ]
 
     results_summary = []
-    run_random_seed = 123 # Use the same seed for the optimization run itself for fair comparison
+    run_random_seed = 123 
+
+    plt.figure(figsize=(12, 8)) # Create a figure for the plot
 
     # Loop through and run each algorithm
     for algo_info in algorithms_to_run:
@@ -63,14 +74,14 @@ if __name__ == "__main__":
         print(f"Optimizer configured with pop_size={optimizer.population_size}, max_iter={optimizer.max_iterations}, elite_ratio={optimizer.elite_ratio}")
 
         print(f"\nStarting optimization for {algo_name}...")
-        best_solution, best_fitness, fitness_history, timing_info = optimizer.run(random_seed=run_random_seed)
+        # MODIFIED: Unpack avg_fitness_history
+        best_solution, best_fitness, fitness_history, avg_fitness_history, timing_info = optimizer.run(random_seed=run_random_seed)
 
         print(f"\n--- {algo_name} Optimization Complete ---")
         total_time = timing_info.get('total_time', -1.0)
         print(f"Total execution time: {total_time:.2f} seconds")
         print(f"Best fitness achieved: {best_fitness:.4f}")
         if best_solution is not None:
-            # print(f"Best solution found: {best_solution}") # Can be long for N=50
             print(f"Best solution found (first 10 genes): {best_solution[:10]}...")
         else:
             print("No solution found.")
@@ -79,19 +90,37 @@ if __name__ == "__main__":
             "name": algo_name,
             "best_fitness": best_fitness,
             "total_time": total_time,
-            "fitness_history": fitness_history # For potential plotting later
+            "fitness_history": fitness_history, 
+            "avg_fitness_history": avg_fitness_history # Store for plotting
         })
 
-    # 4. Display comparative results (simple version)
+        # Plot average fitness for this algorithm
+        if avg_fitness_history:
+            iterations = range(len(avg_fitness_history)) # Should be max_iterations + 1 (for initial)
+            plt.plot(iterations, avg_fitness_history, label=f'{algo_name} Avg Fitness')
+
+    # Configure and display the plot
+    plt.title(f'Average Population Fitness vs. Iteration (N={N_genes}, K={K_interactions})')
+    plt.xlabel('Iteration')
+    plt.ylabel('Average Fitness')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+    # Display comparative results (simple version)
     print("\n\n--- Overall Comparison Summary ---")
     for result in results_summary:
         print(f"Algorithm: {result['name']}")
         print(f"  Best Fitness: {result['best_fitness']:.4f}")
         print(f"  Total Time:   {result['total_time']:.2f}s")
-        if result['fitness_history']:
-             print(f"  Fitness at last iteration: {result['fitness_history'][-1]:.4f}")
+        if result['fitness_history']: # This is best fitness history
+             print(f"  Best Fitness at last iteration: {result['fitness_history'][-1]:.4f}")
+        if result['avg_fitness_history']:
+            print(f"  Avg Fitness at last iteration: {result['avg_fitness_history'][-1]:.4f}")
+
         print("-" * 30)
 
     print("\nTo see detailed iteration logs for each algorithm, set DEBUG_MODE = True in utils/debugging.py")
-    print("The debug logs will be interleaved if DEBUG_MODE is True for both runs.")
 
