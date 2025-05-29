@@ -2,7 +2,7 @@
 """Defines the NK-Landscape optimization problem."""
 
 import numpy as np
-from..utils.debugging import print_debug # Assuming utils is a sibling directory
+from utils.debugging import print_debug # Assuming utils is a sibling directory
 
 class NKLandscapeProblem:
     """
