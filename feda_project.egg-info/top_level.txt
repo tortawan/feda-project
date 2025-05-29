@@ -1,2 +1,0 @@
-feda_algorithm
-problem_definitions
