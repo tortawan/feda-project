@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # 1. Define the problem (once for both algorithms)
     N_genes = 50
     K_interactions = 10
-    landscape_seed = 42 # Ensure the same landscape for both
+    landscape_seed = 24 # Ensure the same landscape for both
     problem = NKLandscapeProblem(N=N_genes, K=K_interactions, landscape_seed=landscape_seed)
     print(f"Problem: {problem} with landscape_seed={landscape_seed}")
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
             "class": MIMIC_O2,
             "config": {
                 "problem": problem,
-                "population_size": 1000,
+                "population_size": 3000,
                 "max_iterations": 50,
                 "elite_ratio": 0.2 # Standardized to elite_ratio
             }
