@@ -27,7 +27,7 @@ To provide a benchmark and explore alternative EDA approaches, a version of the 
    - **File**: `feda_algorithm/optimizer.py` (Class: `MIMIC_O2`)
 
 ## Project Structure
-
+```
 feda-project/
 ├── .gitignore
 ├── README.md
@@ -43,6 +43,8 @@ feda-project/
 └── utils/
     ├── __init__.py
     └── debugging.py          # Utility for debug printing
+
+```
 ## Setup Instructions
 
 ### Prerequisites
