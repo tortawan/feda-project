@@ -6,12 +6,13 @@ __pycache__/
 
 # Egg-info directories
 *.egg-info/
+*.egg
 
 # IDE directories
 .vscode/
 .idea/
 
-# Environment files and directories
+# Virtual Environment files and directories
 venv/
 .venv/
 env/
@@ -22,7 +23,7 @@ env/
 *.tmp
 *.bak
 
-# Output files (adjust according to project specifics)
+# Output files (only if not meant to be tracked)
 *.csv
 *.xlsx
 *.json
@@ -31,6 +32,6 @@ env/
 dist/
 build/
 
-# OS specific files
+# OS-specific files
 Thumbs.db
 .DS_Store
