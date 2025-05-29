@@ -1,0 +1,36 @@
+# Python cache files and directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Egg-info directories
+*.egg-info/
+
+# IDE directories
+.vscode/
+.idea/
+
+# Environment files and directories
+venv/
+.venv/
+env/
+.env/
+
+# Temporary and log files
+*.log
+*.tmp
+*.bak
+
+# Output files (adjust according to project specifics)
+*.csv
+*.xlsx
+*.json
+
+# Distribution / packaging folders
+dist/
+build/
+
+# OS specific files
+Thumbs.db
+.DS_Store
