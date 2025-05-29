@@ -1,13 +1,4 @@
-# feda_project/examples/run_feda_nk.py
-#import sys
-#import os
-# Ensure the project root is in the Python path
-# For the provided structure:
-#sys.path.append("D:/New_folder/Python_Project/feda-project")
-# A more relative path might be (uncomment and adjust if needed):
-# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-# PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..")) # Goes up one level from 'examples'
-# sys.path.append(PROJECT_ROOT)
+
 
 
 import numpy as np
@@ -25,7 +16,7 @@ if __name__ == "__main__":
     # 1. Define the problem (once for both algorithms)
     N_genes = 50
     K_interactions = 10
-    landscape_seed = 24 # Ensure the same landscape for both
+    landscape_seed = 50 # Ensure the same landscape for both
     problem = NKLandscapeProblem(N=N_genes, K=K_interactions, landscape_seed=landscape_seed)
     print(f"Problem: {problem} with landscape_seed={landscape_seed}")
 
