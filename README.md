@@ -38,7 +38,7 @@ A simpler variant of MIMIC is also included:
 
 ## Project Structure
 
-'''
+```
 feda-project/
 ├── .gitignore
 ├── README.md
@@ -61,7 +61,7 @@ feda-project/
 └── utils/
 ├── init.py
 └── debugging.py          # Utility for debug printing
-'''
+```
 
 ## Setup Instructions
 
