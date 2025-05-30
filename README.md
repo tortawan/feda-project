@@ -193,25 +193,3 @@ This project successfully implements and demonstrates the strengths of the Fores
 
 To ensure the reliability and correctness of the algorithms and supporting components, incorporating a testing suite is highly recommended. This would typically involve creating a `tests/` directory in the project root.
 
-### Unit Tests
-These tests focus on verifying individual functions or methods in isolation.
-* **`NKLAndscapeProblem`**:
-    * Test fitness calculation for known small N, K configurations and specific individuals.
-    * Test context index calculation.
-    * Test edge cases (e.g., N=0, K=0).
-* **Optimizer Classes (Critical Functions)**:
-    * **MIMIC_O2**: Test `compute_mutual_information` with small, known datasets. Test `build_dependency_tree` logic with simple MI matrices.
-    * **RF_MIMIC / MIMIC_O2 / MIMIC_MY**: Test parts of the `_sample_new_population` methods if specific components can be isolated.
-    * Test `_select_elite` / `select_elite` methods with predefined populations and fitness scores.
-
-### Integration Tests
-These tests verify that different parts of the system work together correctly.
-* Run a full optimization cycle for all algorithms on a very small, deterministic NK-Landscape problem.
-* Assert that the runs complete without errors and fitness improves or reaches an expected value.
-* Verify that the output structures are in the expected format.
-
-Using a testing framework like `pytest` (which is already in your `requirements.txt`) would facilitate writing and running these tests.
-
----
-
-For more robust conclusions on algorithm performance, it's recommended to run experiments multiple times with different random seeds for the optimizer runs and analyze the statistical properties of the results.
