@@ -189,7 +189,4 @@ The experimental results highlight a common theme in optimization: algorithm per
 
 This project successfully implements and demonstrates the strengths of the Forest-guided Estimation of Distribution Algorithm (RF-MIMIC), showcasing its ability to effectively solve complex optimization problems.
 
-## Testing (Future Enhancements)
-
-To ensure the reliability and correctness of the algorithms and supporting components, incorporating a testing suite is highly recommended. This would typically involve creating a `tests/` directory in the project root.
 
