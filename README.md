@@ -171,12 +171,7 @@ Optimization problems often involve navigating vast search spaces to find the be
         * Their values are probabilistically set based on the distribution of those gene values among the **elite samples that ended up in that same leaf node** during RF training.
         * If no elites are in that leaf, it falls back to the global elite population statistics, and finally to a 0.5 probability if no elite information is available at all. This ensures that even unspecified genes are set with guidance from good solutions.
 
-**Why is this powerful for a recruiter to see?**
 
-* **Advanced Problem Solving:** Demonstrates an understanding of hybridizing machine learning techniques (Random Forests) with established optimization paradigms (EDAs).
-* **Capturing Complexity:** Shows the ability to develop algorithms that can capture intricate dependencies in data, leading to potentially more effective search strategies than simpler methods.
-* **Tunable Exploration/Exploitation:** The `branch_alpha` parameter and the RF's nature provide a nuanced way to control the search, which is a critical aspect of optimization.
-* **Adaptive Learning:** The model (Random Forest) adapts at each generation to the evolving population of good solutions.
 
 ---
 
