@@ -1,6 +1,6 @@
 # FEDA Project: A Forest-guided Estimation of Distribution Algorithm for Optimization
 
-This project presents the implementation and evaluation of the **Forest-guided Estimation of Distribution Algorithm (FEDA)**, specifically the RF-MIMIC variant. This algorithm leverages a Random Forest classifier to model the distribution of elite solutions and guide the generation of new candidate solutions for complex optimization problems.
+This project presents the implementation and evaluation of the **Forest-guided Estimation of Distribution Algorithm (FEDA)**, specifically the RF-MIMIC variant. This novel algorithm, developed in-house, innovatively integrates Random Forests into Estimation of Distribution Algorithms (EDAs), offering a flexible and data-driven way to model complex fitness landscapes. It is especially effective in high-dimensional optimization problems with nonlinear variable dependencies.
 
 To benchmark performance, we also implement two variants of the MIMIC (Mutual Information Maximizing Input Clustering) algorithm:
 - `MIMIC_O2`: uses a dependency tree based on pairwise mutual information.
@@ -12,12 +12,54 @@ All algorithms are evaluated on the **NK-Landscape** problem—a tunable benchma
 
 ## 🔍 Core Algorithm: RF-MIMIC (Forest-guided EDA)
 
+💡 **The Novel Idea: Forest-Guided Distribution Estimation**
+
+Optimization problems often involve navigating vast search spaces to find the best solution. Estimation of Distribution Algorithms (EDAs) tackle this by iteratively building a probabilistic model of high-performing (elite) solutions and then sampling from this model to generate the next generation of candidates.
+
+RF-MIMIC takes this a step further with a novel approach to building and sampling from this model:
+
+### Sophisticated Modeling with Random Forests
+- Unlike simpler models that assume variable independence or pairwise dependencies, RF-MIMIC trains a Random Forest classifier to distinguish elite (high-fitness) from non-elite individuals.
+- The RF learns complex, non-linear relationships and high-order feature interactions.
+- This yields a more expressive and accurate model of promising regions in the search space.
+
+### Intelligent Sampling from Forest Structures
+- Instead of sampling directly from probability distributions, RF-MIMIC traverses each tree in the trained Random Forest to construct new individuals.
+- Traversal starts at the root, and at each decision node:
+  - A probabilistic decision is made to go left or right, influenced by the elite proportion that took each path during training.
+  - A smoothing parameter `branch_alpha` (default: 0.1) encourages exploration by assigning small probabilities to less traveled paths.
+- The sequence of traversal decisions determines values for some genes.
+- Remaining genes (not defined by the tree path) are filled using:
+  - Statistics from elite samples in the reached leaf node
+  - Global elite statistics, or uniform sampling as fallback
+
+### ⚙️ Algorithm Workflow
+1. **Initialization**: Random binary population is created
+2. **Evaluation**: Each individual's fitness is evaluated
+3. **Selection**: Elite (top-N) individuals are selected
+4. **Model Building**: A Random Forest is trained using elite vs. non-elite labels
+5. **Sampling**: New population is sampled via forest traversal, with fallback logic
+6. **Update**: Repeat steps 2-6 for several iterations or until convergence
+
+### ✨ Key Features
+- Implements the RF-MIMIC / Forest-guided Estimation of Distributions Algorithm (FEDA)
+- Uses scikit-learn's RandomForestClassifier for robust modeling
+- Designed for binary-encoded optimization problems
+- Tracks best fitness and average fitness across iterations
+- Logs timing per iteration and total runtime
+- Handles edge cases like empty populations or featureless problems
+- Configurable: `population_size`, `max_iterations`, `elite_ratio`, `rf_params`, and `branch_alpha`
+
 **Key Concept**: RF-MIMIC evolves a population of candidate solutions by training a Random Forest classifier to differentiate elite (high-performing) solutions from non-elites. It then samples new candidates by probabilistically traversing the trained trees, effectively emulating the characteristics of the elite group.
 
+This is the **first known implementation** of a forest-guided probabilistic model within the EDA family. Unlike traditional EDAs that assume independence or pairwise dependencies, RF-MIMIC uses the nonparametric structure of decision trees to learn arbitrary, high-order interactions. The biased traversal algorithm samples along learned paths in the forest, while unresolved features are backfilled using adaptive statistics from elite solutions.
+
 **Highlights**:
+- Introduces a new method: decision-tree-guided probabilistic sampling
+- Models nonlinear, hierarchical dependencies in high-dimensional spaces
+- Resilient to noisy fitness landscapes and limited elite data
 - Uses scikit-learn's `RandomForestClassifier`
-- Samples new solutions by biased tree traversal
-- Handles sparse data gracefully
+- Handles sparse or degenerate cases with elegant fallbacks
 
 📂 File: `feda_algorithm/rf_mimic.py`  
 🧱 Class: `RF_MIMIC`
@@ -138,68 +180,4 @@ Only RF-MIMIC shows significant progress under high complexity.
 ## 🏁 Conclusion
 This project demonstrates how Random Forests can guide probabilistic model-based optimization algorithms effectively. The **RF-MIMIC** approach adapts well across complexity levels and shows strong potential in high-dimensional, epistatic optimization tasks.
 
-# RF-MIMIC: Forest-Guided Estimation of Distributions Algorithm (FEDA)
-
-## 🚀 Overview
-
-This project implements the **Forest-guided Estimation of Distributions Algorithm (FEDA)**, also known as **RF-MIMIC**. It's an advanced Estimation of Distribution Algorithm (EDA) designed for binary optimization problems. Unlike traditional EDAs that might use simpler probabilistic models, RF-MIMIC leverages the power of **Random Forests** to model the relationships between variables in promising solutions and guide the generation of new candidate solutions.
-
-This implementation is designed to be robust, configurable, and provide insights into the optimization process through detailed fitness tracking and timing information.
-
----
-
-## 💡 The Novel Idea: Forest-Guided Distribution Estimation
-
-Optimization problems often involve navigating vast search spaces to find the best solution. Estimation of Distribution Algorithms (EDAs) tackle this by iteratively building a probabilistic model of high-performing (elite) solutions and then sampling from this model to generate the next generation of candidates.
-
-**RF-MIMIC takes this a step further with a novel approach to building and sampling from this model:**
-
-1.  **Sophisticated Modeling with Random Forests:**
-    * Instead of relying on simpler models that assume variable independence (like some basic EDAs) or pairwise dependencies, RF-MIMIC employs a **Random Forest classifier**.
-    * In each generation, this Random Forest is trained to distinguish between **elite** (high-fitness) individuals and **non-elite** individuals from the current population.
-    * By doing so, the Random Forest implicitly learns complex, non-linear relationships and important feature interactions that characterize good solutions. This allows for a much richer and more accurate model of the promising regions in the search space.
-
-2.  **Intelligent Sampling from Forest Structures:**
-    * The core novelty lies in how new solutions are generated. Instead of just predicting probabilities, RF-MIMIC **traverses the decision trees** within the trained Random Forest to construct new individuals.
-    * For each new individual to be generated from a specific tree:
-        * It starts at the root of the tree.
-        * At each internal node (which represents a gene/feature and a split point), a probabilistic decision is made to go left or right. This decision is influenced by:
-            * The proportion of elite samples that went down each path during the RF training.
-            * A **`branch_alpha` smoothing factor**: This parameter (default 0.1 in the code) adds a small probability to explore paths less frequented by elites, preventing premature convergence and encouraging diversity. It helps balance exploration and exploitation.
-        * The sequence of decisions taken defines the values for certain genes in the new individual.
-    * **Leaf Node Refinement:** For genes *not* determined by the path taken to a leaf node (i.e., genes not used in splits along that specific path):
-        * Their values are probabilistically set based on the distribution of those gene values among the **elite samples that ended up in that same leaf node** during RF training.
-        * If no elites are in that leaf, it falls back to the global elite population statistics, and finally to a 0.5 probability if no elite information is available at all. This ensures that even unspecified genes are set with guidance from good solutions.
-
-
-
----
-
-## ⚙️ Algorithm Workflow
-
-The RF-MIMIC algorithm proceeds iteratively:
-
-1.  **Initialization:** A random population of binary individuals (solutions) is created.
-2.  **Evaluation:** The fitness of each individual in the population is calculated using the problem-specific fitness function.
-3.  **Selection:** The population is divided into an 'elite' set (the top N individuals based on fitness) and a 'non-elite' set.
-4.  **Model Building (Random Forest Training):**
-    * A Random Forest classifier is trained using the elite individuals (labeled as class 1) and non-elite individuals (labeled as class 0).
-    * The forest learns to identify patterns and variable combinations characteristic of high-fitness solutions.
-5.  **Sampling New Population (Forest-Guided):**
-    * A new population is generated by sampling from the trained Random Forest as described in "The Novel Idea" section. Each tree in the forest contributes a portion of the new samples.
-    * Fallback mechanisms are in place to handle scenarios with insufficient data for RF training or sampling (e.g., sampling based on elite statistics only, or re-initializing if necessary).
-6.  **Update & Repeat:** The new population replaces the old one. The best solution found so far is tracked. The process (steps 2-6) repeats for a defined number of iterations or until a stopping criterion is met.
-
----
-
-## ✨ Key Features
-
-* Implements the RF-MIMIC / Forest-guided Estimation of Distributions Algorithm (FEDA).
-* Utilizes Scikit-learn's `RandomForestClassifier` for robust and efficient model training.
-* Specifically designed for **binary-encoded optimization problems**.
-* Comprehensive tracking of best fitness per iteration and average population fitness.
-* Detailed timing information for iterations and total runtime.
-* Includes extensive **edge-case handling** and debugging print statements (`print_debug`) for transparency and robustness (e.g., handling empty elite sets, population size mismatches, num_genes=0).
-* Configurable parameters: `population_size`, `max_iterations`, `elite_ratio`, Random Forest parameters (`rf_params`), and the novel `branch_alpha`.
-
----
+> 💡 This project combines ML, probabilistic modeling, and combinatorial optimization in a clean, modular, and extensible way—ideal for recruiters evaluating algorithmic thinking and coding skills.
