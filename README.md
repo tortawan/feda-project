@@ -180,4 +180,4 @@ Only RF-MIMIC shows significant progress under high complexity.
 ## 🏁 Conclusion
 This project demonstrates how Random Forests can guide probabilistic model-based optimization algorithms effectively. The **RF-MIMIC** approach adapts well across complexity levels and shows strong potential in high-dimensional, epistatic optimization tasks.
 
-> 💡 This project combines ML, probabilistic modeling, and combinatorial optimization in a clean, modular, and extensible way—ideal for recruiters evaluating algorithmic thinking and coding skills.
+
