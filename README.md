@@ -43,13 +43,13 @@ feda-project/
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
-├── images/                 # <--- Create this folder for your result images
+├── images/                 
 │   ├── 50_1.png
 │   ├── 50_5.png
 │   ├── 50_10.png
 │   └── 50_20.png
 ├── examples/
-│   └── run_feda_nk.py        # Main script to run experiments and compare algorithms
+│   └── run_feda_nk.py       
 ├── feda_algorithm/
 │   ├── init.py
 │   ├── rf_mimic.py
@@ -57,10 +57,10 @@ feda-project/
 │   └── mimic_my.py
 ├── problem_definitions/
 │   ├── init.py
-│   └── nk_landscape.py       # Defines the NK-Landscape problem
+│   └── nk_landscape.py      
 └── utils/
 ├── init.py
-└── debugging.py          # Utility for debug printing
+└── debugging.py         
 ```
 
 ## Setup Instructions
