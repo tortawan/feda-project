@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from problem_definitions.nk_landscape import NKLandscapeProblem
+from problem_definitions import NKLandscapeProblem
 
 class TestNKLandscapeProblem:
     """Tests for the NKLandscapeProblem class."""
